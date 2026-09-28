@@ -15,10 +15,6 @@ public class StudentService {
         this.studentRepository = studentRepository;
     }
 
-    public Student createStudent(Student student) {
-        return studentRepository.save(student);
-    }
-
     public List<Student> getAllStudents() {
         return studentRepository.findAll();
     }
@@ -28,18 +24,26 @@ public class StudentService {
                 .orElseThrow(() -> new RuntimeException("Student not found"));
     }
 
-    public Student updateStudent(Long id, Student updatedStudent) {
+    public Student createStudent(Student student) {
+        return studentRepository.save(student);
+    }
 
-        Student existingStudent = getStudentById(id);
+    public Student updateStudent(Long id, Student student) {
 
-        existingStudent.setName(updatedStudent.getName());
-        existingStudent.setEmail(updatedStudent.getEmail());
+        Student existingStudent = studentRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Student not found"));
+
+        existingStudent.setName(student.getName());
+        existingStudent.setEmail(student.getEmail());
 
         return studentRepository.save(existingStudent);
     }
 
     public void deleteStudent(Long id) {
-        Student student = getStudentById(id);
+
+        Student student = studentRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Student not found"));
+
         studentRepository.delete(student);
     }
 }
